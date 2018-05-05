@@ -1,0 +1,68 @@
+﻿@using Antlr.Runtime
+@model UniversityManagementSystem.Models.Department
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+<script src="~/Scripts/jquery-2.2.4.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<hr />
+
+<body>
+    @using (Html.BeginForm(new { id = "departmentForm" }))
+    {
+        if (ViewBag.Mgs != null)
+        {
+            <p style="font-size:20px; color:black">@ViewBag.Mgs</p>
+        }
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Code, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Code, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "Name" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+    }
+    @Html.ActionLink("Back To List", "Index")
+    @section Scripts {
+        <script src="~/Scripts/jquery-2.2.4.js"></script>
+        <script src="~/Scripts/jquery.validate.js"></script>
+        <script src="~/Scripts/jquery.validate.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                $("#departmentForm").validate({
+                    rules: {
+                        Name: "required",
+                    },
+                    messages: {
+                        Name: "Please enter the Department Name",
+                    }
+                });
+            });
+        </script>
+    }
+</body>

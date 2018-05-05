@@ -1,0 +1,181 @@
+﻿@model UniversityManagementSystem.Models.ClassSchedule
+
+@{
+    ViewBag.Title = "Save";
+}
+
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+<h2>Allocate Class Room</h2>
+
+<div class="well" style="align-content: center">
+   
+    <form id="saveClassRoom" method="POST">
+        @if (ViewBag.message != null)
+        {
+            <p style="font-size:20px;color:olivedrab">@ViewBag.message</p>
+        }
+        <div>
+            <table>
+                <tr>
+
+                    <td>
+                        @Html.LabelFor(s => s.DepartmentId)
+                    </td>
+                    <td>
+                        <select id="DepartmentId" name="DepartmentId" class="form-control">
+                            <option value="">Select.....</option>
+                            @foreach (var department in ViewBag.Departments)
+                            {
+                                <option value="@department.Id">@department.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>                               
+                
+                <tr>
+                    <td>
+                        <label for="CourseId">Course</label>
+                    </td>
+                    <td>
+                        <select id="CourseId" name="CourseId" class="form-control">
+                            <option value="">Select.....</option>
+                        </select>
+                    </td>
+                </tr>
+                
+                <tr>
+
+                    <td>
+                        @Html.LabelFor(s => s.RoomId)
+                    </td>
+                    <td>
+                        <select id="RoomId" name="RoomId" class="form-control">
+                            <option value="">Select.....</option>
+                            @foreach (var room in ViewBag.RoomList)
+                            {
+                                <option value="@room.Id">@room.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr> 
+                
+                <tr>
+
+                    <td>
+                        @Html.LabelFor(s => s.DayId)
+                    </td>
+                    <td>
+                        <select id="DayId" name="DayId" class="form-control">
+                            <option value="">Select.....</option>
+                            @foreach (var day in ViewBag.Days)
+                            {
+                                <option value="@day.Id">@day.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr> 
+                
+                <tr>
+
+                    <td>
+                        @Html.LabelFor(s => s.StartTime)
+                    </td>
+                    <td>
+                        <input type="time" name="StartTime" id="StartTime" class="form-control" size="4" />
+                      
+                    </td>
+                    <td>
+                        <input type="radio" name="time" value="AM" />AM
+
+                        <input type="radio" name="time" value="PM" />PM
+                    </td>
+                </tr> 
+                
+                <tr>
+
+                    <td>
+                        @Html.LabelFor(s => s.EndTime)
+                    </td>
+                    <td>
+                        <input type="time" name="EndTime" id="timepicker" class="form-control" size="2" />
+
+                    </td>
+                    <td><input type="radio" name="time" value="AM"/>AM
+                    
+                        <input type="radio" name="time" value="PM"/>PM     
+                    </td>
+                </tr>
+               
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Allocate" class="btn btn-success" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+@section scripts{
+
+    <script src="~/Scripts/jquery-2.2.4.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+
+    <script>
+        $(document).ready(function () {
+        
+            $("#saveClassRoom").validate({
+                rules: {
+                    StudentId: "required",
+                    CourseId: "required",
+                    Grade: "required"
+                },
+                messages: {
+                    StudentId: "Please select the student reg no",
+                    CourseId: "Please select a course",
+                    Grade:"Please select grade"
+                }
+            });
+
+
+
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                $("#CourseId").empty();
+                $("#CourseId").append('<option value="">Select Course</option>');
+
+                var json = { departmentId: deptId };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCoursesByDepartmentId", "ClassRoomAllocate")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.Name + '</option>');
+
+                        });
+                    }
+                });
+
+            });
+
+        });
+    </script>
+    
+<script >
+    $('#timepicker').timepicker();
+    $('#StartTime').timepicker();
+    
+</script>
+
+}
+
